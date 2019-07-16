@@ -66,6 +66,52 @@ namespace interview_demo.Controllers
             return View(categoey);
         }
 
+        //編輯資料頁
+        public ActionResult Edit(int id = 0)
+        {
+            if (id == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Category category = db.Categories.Find(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(category);
+        }
+
+        //編輯資料流程
+        [HttpPost]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Category categoryToUpdate = db.Categories.Find(id);
+            if (!TryUpdateModel(categoryToUpdate, "", new string[] { "title", "is_published" }))
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again.");
+            }
+
+            try
+            {
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again.");
+            }
+
+            return View(categoryToUpdate);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
