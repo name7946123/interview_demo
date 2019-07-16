@@ -37,6 +37,35 @@ namespace interview_demo.Controllers
             return View(category);
         }
 
+        //建立資料頁
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        //建立資料流程
+        [HttpPost]
+        public ActionResult Create([Bind(Include = "title, is_published")]Category categoey)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    categoey.created_at = DateTime.Now;
+                    categoey.modified_at = DateTime.Now;
+                    db.Categories.Add(categoey);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again.");
+            }
+
+            return View(categoey);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
