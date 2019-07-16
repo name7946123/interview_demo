@@ -20,6 +20,23 @@ namespace interview_demo.Controllers
             return View(categories);
         }
 
+        //資料詳細頁
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Category category = db.Categories.Find(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(category);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
