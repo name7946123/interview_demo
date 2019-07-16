@@ -112,6 +112,35 @@ namespace interview_demo.Controllers
             return View(categoryToUpdate);
         }
 
+        //刪除資料頁
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        //刪除資料流程
+        [HttpPost]
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            try
+            {
+                Category category = db.Categories.Find(id);
+                db.Categories.Remove(category);
+                db.SaveChanges();
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unable to delete. Try again.");
+            }
+
+            return RedirectToAction("Index");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
